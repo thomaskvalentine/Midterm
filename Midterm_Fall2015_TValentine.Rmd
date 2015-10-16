@@ -87,12 +87,10 @@ Our new data set, nyc_clean, kept the 17 variables from the original data set, b
 ***
 ###3. (8 points) Make a figure (either a density plot or a histogram format) comparing the distributions of percentile reading scores for students who did and did not receive a voucher. Do your best to make the figure "publishable" by giving it clear axis titles, legend labels, and other aesthetic improvements. 
 
-```{r echo=FALSE}
+```{r}
 library(dplyr)
 library(ggplot2)
-```
 
-```{r}
 #First, we create a new variable, readingscores, that is the mean reading score for each student
 nyc_clean$Reading <- (nyc_clean$y0_read_percentile + nyc_clean$y1_read_percentile + nyc_clean$y2_read_percentile + nyc_clean$y3_read_percentile)/4
 
@@ -122,21 +120,32 @@ nycreading$Voucher <- as.factor(nycreading$Voucher)
 nycreading$ReadingScores <- as.numeric(nycreading$ReadingScores)
 
 #Now, we can create our density plot:
-p <- ggplot(nycreading, aes(x=ReadingScores)) + geom_density(aes(group=Voucher, colour=Voucher, fill=Voucher), alpha=0.3) 
+p <- ggplot(nycreading, aes(x=ReadingScores)) + geom_density(aes(group=Voucher, colour=Voucher, fill=Voucher), alpha=0.3)
 
 p + labs(title = "Voucher Effects on Reading Scores in NYC Schools") + xlab("Mean Student Reading Scores - Year 0-3") + ylab("Density of Scores")
 
 ```
 
-
-
-
 ***
 ###4. (4 points) In no more than 2-3 sentences, describe what your visualization in 1.C indicates about these data. Do the treatment and control groups appear to be similar (in terms of reading pre-test scores)? Why or why not? 
+
+These data appear to be related. They are similarly distributed (with a strong left skew that peaks near the 12.5% score mark), although the students that received the vouchers skew slightly farther left, demonstrating concentrations of slightly lower scores at all but around the 60-65% grade mark. As a result, both the treatment (VOucher=Yes) and Control (Voucher=No) appear to be remarkably similar in reading scores, and we can expect that pre-test scores also fall in this range.
 
 
 ***
 ###5. (4 points) Typically, policy experiments such as the NYC school voucher lottery experiment are indended to produce statistical evidence that can then be generalized to broader policy applications (i.e., how might vouchers influence educational outcomes for other students who weren't part of the original experiment). Based on the reading pre-test scores that you visualized in C, describe any concerns you might have about our ability to generalize the results of this experiment to ALL elementary school students in the United States in no more than 2-3 sentences. 
+
+<span style="color:green">**First let me say that I've been reminded of an important lesson: always read all the questions before beginning. Had I done so, I would have seen the repeated references to "pre-test" scores (instead of assuming it meant all reading scores across years, since the question didn't specify) and I could have saved myself close to 6 hours of headache. Lesson learned**</span>
+
+My first concern is that there does not seem to be a significant difference in reading score density between the control and treatment group, with both lacking a normal distribution (which is a big flag). My second concern is the fact that (due to missed responses that we have not yet determined were missing at random) we went from 2666 observations to a visualized 993 observations. Pre-testing can lead to problems with external validity, and could potentially explain the similarity of results before and after the voucher experiment.
+
+####Bonus: To satisfy my curiousity, I've decided to quickly take a look at the ggplot for Pre-Test Reading Scores. After looking, I'm satisfied that I would have come to largely the same conclusions.
+```{r echo=FALSE}
+p1 <- ggplot(nyc_clean, aes(x=y0_read_percentile)) + geom_density(aes(group=Treatment, colour=Treatment, fill=Treatment), alpha=0.3)
+
+p1 + labs(title = "Pre-Test Reading Scores in NYC Schools") + xlab("Mean Student Reading Scores") + ylab("Density of Scores")
+```
+
 
 ```{r}
 summary(cars)

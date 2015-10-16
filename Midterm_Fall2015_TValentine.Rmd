@@ -47,25 +47,23 @@ nyc = read.csv('input/NYC_SchoolVoucher_Experiment.csv',row.names=1)
 
 ###1. (6 points) Compute the average reading and math percentiles for each year across all students. 
 
-```{r}
-summary(nyc)
-```
+Using In-Line R Code, we can demonstrate the following values from our "nyc" data set:
 
 ####Year 0
-1. Average Reading % (across all students): 22.78
-2. Average Math % (across all students): 16.54
+1. Average Reading % (across all students) is  <span style="color:green">_`r round(mean(nyc$y0_read_percentile,na.rm=T),2)`_</span>
+2. Average Math % (across all students) is  <span style="color:green">_`r round(mean(nyc$y0_math_percentile,na.rm=T),2)`_</span>
 
 ####Year 1
-1. Average Reading % (across all students): 26.06
-2. Average Math % (across all students): 22.3 
+1. Average Reading % (across all students) is  <span style="color:green">_`r round(mean(nyc$y1_read_percentile,na.rm=T),2)`_</span>
+2. Average Math % (across all students): is  <span style="color:green">_`r round(mean(nyc$y1_math_percentile,na.rm=T),2)`0_</span>
 
 ####Year 2
-1. Average Reading % (across all students): 26.09
-2. Average Math % (across all students): 23.56 
+1. Average Reading % (across all students) is  <span style="color:green">_`r round(mean(nyc$y2_read_percentile,na.rm=T),2)`_</span>
+2. Average Math % (across all students) is  <span style="color:green">_`r round(mean(nyc$y2_math_percentile,na.rm=T),2)`_</span>
 
 ####Year 3
-1. Average Reading % (across all students): 32.63
-2. Average Math % (across all students): 32.5
+1. Average Reading % (across all students) is  <span style="color:green">_`r round(mean(nyc$y3_read_percentile,na.rm=T),2)`_</span>
+2. Average Math % (across all students) is  <span style="color:green">_`r round(mean(nyc$y3_math_percentile,na.rm=T),2)`0_</span>
 
 ####Analysis:
 *Reading: Increased significantly from year 0-1, then remained mostly unchanged from year 1-2, then increased again from year 2 to 3
@@ -78,12 +76,19 @@ summary(nyc)
 ```{r}
 #We will create a new "clean" data set. To do so, we will create a subset of the original data set "nyc", where any observations contain blank ("NA") reading or math scores in Year Zero or Year 1.
 nyc_clean <- subset(nyc, y0_read_percentile != "NA" & y0_math_percentile != "NA" & y1_read_percentile != "NA" & y0_read_percentile != "NA")
+
+#Let's compare the dimensions of our original to our new data set
+dim(nyc)
+dim(nyc_clean)
 ```
+
+Our new data set, nyc_clean, kept the 17 variables from the original data set, but lost 1211 observations during this process. We were able to confirm visually (from inside R Studio) that the cleaning process successfully removed observations with missing scores in the correct columns/variables.
 
 ***
 ###3. (8 points) Make a figure (either a density plot or a histogram format) comparing the distributions of percentile reading scores for students who did and did not receive a voucher. Do your best to make the figure "publishable" by giving it clear axis titles, legend labels, and other aesthetic improvements. 
 
-```{r}
+```{r echo=FALSE}
+library(dplyr)
 
 ```
 

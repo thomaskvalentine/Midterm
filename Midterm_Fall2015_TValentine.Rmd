@@ -89,8 +89,45 @@ Our new data set, nyc_clean, kept the 17 variables from the original data set, b
 
 ```{r echo=FALSE}
 library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+#First, we create a new variable, readingscores, that is the mean reading score for each student
+nyc_clean$Reading <- (nyc_clean$y0_read_percentile + nyc_clean$y1_read_percentile + nyc_clean$y2_read_percentile + nyc_clean$y3_read_percentile)/4
+
+#Second, we create a data set that contains only reading scores and treatment value
+nycreading <- select(nyc_clean, Treatment, Reading)
+
+#Next, we reorder the columns so we have our continuous variable (reading scores) first, then our binary treatment effect (0,1) second.
+nycreading <- nycreading[c("Reading", "Treatment")]
+
+#We omit observations with missing values, which drops 462 observations
+nycreading <- na.omit(nycreading)
+
+library(plyr)
+
+#We rename the columns to suit our goals for the figure
+nycreading <- rename(nycreading, c("Treatment"="Voucher", "Reading"="ReadingScores"))
+
+#We convert our binary 0 and 1 values to 'Yes' and 'No' so that we can view the treatment groups as factors
+nycreading[nycreading==0] <- 'No'
+nycreading[nycreading==1] <- 'Yes'
+
+#One item under Reading Scores is incorrectly coded in this process. We fix it here:
+nycreading$ReadingScores[nycreading$ReadingScores=='Yes'] <- 1.00
+
+#We recode Voucher as a Factor
+nycreading$Voucher <- as.factor(nycreading$Voucher)
+nycreading$ReadingScores <- as.numeric(nycreading$ReadingScores)
+
+#Now, we can create our density plot:
+p <- ggplot(nycreading, aes(x=ReadingScores)) + geom_density(aes(group=Voucher, colour=Voucher, fill=Voucher), alpha=0.3) 
+
+p + labs(title = "Voucher Effects on Reading Scores in NYC Schools") + xlab("Mean Student Reading Scores - Year 0-3") + ylab("Density of Scores")
 
 ```
+
 
 
 
@@ -127,7 +164,7 @@ summary(cars)
 ```
 
 ***
-###9. (6 points) Evaluate the hypothesis from 1.H at a significance level of $\alpha = 0.05$ and state your conclusion in 1-2 sentences. 
+###9. (6 points) Evaluate the hypothesis from 8 at a significance level of α=0.05 and state your conclusion in 1-2 sentences. 
 
 ```{r}
 summary(cars)

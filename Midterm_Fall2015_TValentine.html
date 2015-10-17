@@ -357,32 +357,37 @@ mytable &lt;-<span class="st"> </span><span class="kw">table</span>(nyc_clean$Tr
 mathchg &lt;-<span class="st"> </span><span class="kw">mean</span>(nyc_clean$y1_math_percentile)-<span class="kw">mean</span>(nyc_clean$y0_math_percentile)</code></pre>
 <p>Now that we know that the average change in math scores after one year is 6.82, we can construct our hypotheses:</p>
 <p><strong>Null Hypothesis:</strong> Students who receive a voucher experience a change in math scores after one year that is equal to 6.82.</p>
-<p><strong>Alternative Hypothesis</strong> Students who receive a voucher experience a change in math scores after one year that is not equal to 6.82.</p>
-<p><span class="math">\[H_0: \mu==6.82\]</span> <span class="math">\[H_A: \mu!=6.82\]</span></p>
+<p><strong>Alternative Hypothesis:</strong> Students who receive a voucher experience a change in math scores after one year that is not equal to 6.82.</p>
+<p><span class="math">\[H_0: \mu == 6.82\]</span> <span class="math">\[H_A: \mu != 6.82\]</span></p>
 <hr />
 </div>
 <div id="points-evaluate-the-hypothesis-from-8-at-a-significance-level-of-a0.05-and-state-your-conclusion-in-1-2-sentences." class="section level3">
 <h3>9. (6 points) Evaluate the hypothesis from 8 at a significance level of a=0.05 and state your conclusion in 1-2 sentences.</h3>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#First, we will create a new variable that consists of the differences in math scores after one year for each student:</span>
+nyc_clean$MathAfter &lt;-<span class="st"> </span>(nyc_clean$y1_math_percentile -<span class="st"> </span>nyc_clean$y0_math_percentile)
+
+<span class="co">#To double check, we will look at the mean of this new variable, to confirm it matches our calculation from Question 8 (6.82). It does.</span>
+<span class="kw">mean</span>(nyc_clean$MathAfter)</code></pre>
+<pre><code>## [1] 6.818557</code></pre>
+<p>We now have a variable that we can test. we are interested in positive and negative changes, so we are interested in two-tailed tests.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">t.test</span>(<span class="dt">x=</span>nyc_clean$MathAfter[nyc_clean$Treatment==<span class="dv">1</span>],<span class="dt">mu=</span>mathchg,<span class="dt">alternative=</span><span class="st">'two.sided'</span>)</code></pre>
+<pre><code>## 
+##  One Sample t-test
+## 
+## data:  nyc_clean$MathAfter[nyc_clean$Treatment == 1]
+## t = 0.41334, df = 780, p-value = 0.6795
+## alternative hypothesis: true mean is not equal to 6.818557
+## 95 percent confidence interval:
+##  5.744653 8.465335
+## sample estimates:
+## mean of x 
+##  7.104994</code></pre>
+<p>Having tested the target sample (the 780 students that received a voucher) and compared it to the true mu of the entire population (all students), our t-test reveals that we have a p-value of 0.6795. As means of double checking the quality of our calculation, we can confirm that the mean is within the 95 percent confidence interval. Due to the high value of the P, which is significantly higher than the .05 alpha, we can safely reject the null hypothesis.</p>
 <hr />
 </div>
 <div id="points-would-your-conclusion-change-at-alpha-0.10-why-or-why-not" class="section level3">
 <h3>10. (2 points) Would your conclusion change at <span class="math">\(\alpha = 0.10\)</span>? Why or why not?</h3>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
+<p><span style="color:green">No our conclusion would not change.</span> If our alpha was increased to .10, reflecting a 90% confidence interval, we would still be able to safely reject the null. Our p-value of .6795 is still significantly higher than the .10 alpha.</p>
 <hr />
 </div>
 <div id="points-there-are-four-assumptions-that-hold-for-the-test-above-to-be-valid-independence-within-groups-independence-between-groups-sample-sizes-both-above-30-and-symmetric-distributions.-are-you-satisfied-that-each-of-these-are-upheld-is-there-anything-in-particular-that-you-might-be-concerned-about" class="section level3">

@@ -207,8 +207,8 @@ As opposed to the previous question, where we used the P(AandB)=P(A)xP(B) formul
 ###8. (4 points) We are interested in studying whether the change in math scores after one year is different for students who receive a voucher versus those who do not. Write the null and alternative hypotheses in words and then using symbols.
 
 ```{r}
-#Before we begin, we need to know the average change in math scores after one year (from year 0 to year 1) for all students:
-mathchg <- mean(nyc_clean$y1_math_percentile)-mean(nyc_clean$y0_math_percentile)
+#Before we begin, we need to know the average change in math scores after one year (from year 0 to year 1) for the students that did not receive a voucher:
+mathchg <- mean(nyc_clean$y1_math_percentile[nyc_clean$Treatment==0])-mean(nyc_clean$y0_math_percentile[nyc_clean$Treatment==0])
 ```
 
 Now that we know that the average change in math scores after one year is `r round(mathchg, 2)`, we can construct our hypotheses:
@@ -224,90 +224,95 @@ $$H_A: \mu != `r round(mathchg, 2)`$$
 ###9. (6 points) Evaluate the hypothesis from 8 at a significance level of α=0.05 and state your conclusion in 1-2 sentences. 
 
 ```{r}
-#First, we use the t.test command in R to test the hypothesis quickly
-t.test(x = voting.dat$tech,alternative = 'greater',mu = 3)
-
-#Next, we complete the process "by hand", going step by step. 
-#To do this, we use: t-obs = (obs-exp) / (sd/sqrt(n))
-t.obs <- (mean(voting.dat$tech) - 3) / {sd(voting.dat$tech)^2/sqrt(nrow(voting.dat))}
-pt(t.obs,df = nrow(voting.dat)-1,lower.tail = FALSE)
+#First, we will create a new variable that consists of the differences in math scores after one year for each student:
+nyc_clean$MathAfter <- (nyc_clean$y1_math_percentile - nyc_clean$y0_math_percentile)
 ```
+
+We now have a variable that we can test. we are interested in positive and negative changes, so we are interested in two-tailed tests.
+
+```{r}
+t.test(x=nyc_clean$MathAfter[nyc_clean$Treatment==1],mu=mathchg,alternative='two.sided')
+```
+
+Having tested the target sample (the 780 students that received a voucher) and compared it to the true mu of the entire population (all students), our t-test reveals that we have a p-value of 0.3725.  Due to the high value of the P, which is significantly higher than the .05 alpha, we fail to reject the null hypothesis that students who receive a voucher experience a change in math scores after one year that is equal to `r round(mathchg, 2)` or (to put it another way) we cannot support the claim that those that receive vouchers experienced a difference in math scores after a year.
+
+Note: As means of double checking the quality of our calculation, we can confirm that the mean is within the 95 percent confidence interval.
 
 ***
 ###10. (2 points) Would your conclusion change at $\alpha = 0.10$? Why or why not?
 
-```{r}
-summary(cars)
-```
+<span style="color:green">No our conclusion would not change.</span>  If our alpha was increased to .10, reflecting a 90% confidence interval, we would still be unable to reject the null. Our p-value of 0.3725 is still significantly higher than the .10 alpha.
 
 ***
 ###11. (6 points) There are four assumptions that hold for the test above to be valid: independence within groups, independence between groups, sample sizes both above 30, and symmetric distributions. Are you satisfied that each of these are upheld? Is there anything in particular that you might be concerned about? 
 
 ```{r}
-summary(cars)
+
 ```
+
 
 ***
 ###12. (4 points) Next, you are asked to evaluate whether students in the treatment group differ in terms of their reading ability from the pre-test to the year 1 post-test. Write out the null and alternative hypotheses in words and then in symbols. 
 
 ```{r}
-summary(cars)
+
 ```
 
 ***
 ###13. (6 points) Conduct a t-test to evaluate this hypothesis at $\alpha = 0.01$ significance level. Interpret your results in 1-2 complete sentences.  
  
 ```{r}
-summary(cars)
-``` 
+
+```
  
 *** 
 ###14. (4 points) Explain how you could evaluate the hypothesis above using a confidence interval instead of a p-value.
 
 ```{r}
-summary(cars)
+
 ```
+
 
 ***
 ###15. (2 points) Interpret the confidence interval you estimated for question N in a sentence.
 
 ```{r}
-summary(cars)
+
 ```
 
 ***
 ###16. (8 points) Perform a test of whether the average math pre-test score differs by grade level at $\alpha = 0.10$ significance level. Write out your hypothesis in symbols, perform the test, and then report your findings in a complete sentence.
 
 ```{r}
-summary(cars)
+
 ```
 
 ***
 ###17. (8 points) The NYC School District considers students who perform at or above the 50th percentile to be "passing". At a 99% significance level, is the proportion of all students in the sample (voucher and no-voucher) that are considered to be passing in math significantly different between the pre-test and year 1 post-test?
 
 ```{r}
-summary(cars)
+
 ```
 
 ***
 ###18. (6 points) Make a boxplot that compares the distribution of math scores between the pre-test and year 1 post-test for all students. Do your best to make the figure "publishable" by giving it clear axis titles, legend labels, and other aesthetic improvements. In no more than 2-3 sentences, describe how your figure supports (or does not support) your finding from question 17.
 
 ```{r}
-summary(cars)
+
 ```
 
 ***
 ###19. (4 points) Consider the correlation between math percentile and reading percentile for year 1 test scores. Compute Pearson’s `r` between these two variables. Is the correlation higher or lower than you would have expected? 
 
 ```{r}
-summary(cars)
+
 ```
 
 ***
 ###20. (6 points) You might argue that percentiles are actually rank-order data and not ratio-level data. For rank-order data, a more appropriate correlation measure is Spearman’s $\rho$, which is a rank correlation. Compute $\rho$ and contrast the results from $r$ (for question S above). Why do the results differ?
 
 ```{r}
-summary(cars)
+
 ```
 
 ***

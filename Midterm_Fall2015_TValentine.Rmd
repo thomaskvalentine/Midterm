@@ -272,21 +272,42 @@ ggplot(nyc_clean,aes(x=nyc_clean$MathAfter,group=nyc_clean$Treatment,col=nyc_cle
 
 As we see, symmetry is supported for both groups. We are satisfied that each of these are upheld. It feels callous to say there is nothing we are concerned about (especially on a test where I'm certain we are meant to notice something), but all I can mention is that the symmetry may not be quite perfect. We can see some changes on the right side of the distribution, possibly indicating some important phenomena. Mostly, however, I think we should feel satisfied.
 
-
 ***
 ###12. (4 points) Next, you are asked to evaluate whether students in the treatment group differ in terms of their reading ability from the pre-test to the year 1 post-test. Write out the null and alternative hypotheses in words and then in symbols. 
 
 ```{r}
-
+#Before we begin, we need to know the average change in reading scores after one year (from year 0 to year 1) for the students that did not receive a voucher:
+readchg <- mean(nyc_clean$y1_read_percentile[nyc_clean$Treatment==0])-mean(nyc_clean$y0_read_percentile[nyc_clean$Treatment==0])
 ```
+
+Now that we know that the average change in read scores after one year is `r round(readchg, 2)`, we can construct our hypotheses:
+
+**Null Hypothesis:** Students who receive a voucher experience a change in reading scores after one year that is equal to `r round(readchg, 2)`.
+
+**Alternative Hypothesis:** Students who receive a voucher experience a change in read scores after one year that is not equal to `r round(readchg, 2)`.
+
+$$H_0: \mu == `r round(readchg, 2)`$$
+$$H_A: \mu != `r round(readchg, 2)`$$
+
 
 ***
 ###13. (6 points) Conduct a t-test to evaluate this hypothesis at $\alpha = 0.01$ significance level. Interpret your results in 1-2 complete sentences.  
  
 ```{r}
-
+#First, we will create a new variable that consists of the differences in math scores after one year for each student:
+nyc_clean$ReadAfter <- (nyc_clean$y1_read_percentile - nyc_clean$y0_read_percentile)
 ```
- 
+
+We now have a variable that we can test. we are interested in positive and negative changes, so we are interested in two-tailed tests.
+
+```{r}
+t.test(x=nyc_clean$ReadAfter[nyc_clean$Treatment==1],mu=readchg,conf.level = 0.99,alternative='two.sided')
+```
+
+Having tested the target sample (the 780 students that received a voucher) and compared it to the true mu of the entire population (all students), our t-test reveals that we have a p-value of 0.03434.  Due to the  value of the P, which is slightly higher than the .01 alpha, we fail to reject the null hypothesis that students who receive a voucher experience a change in reading scores after one year that is equal to `r round(readchg, 2)` or (to put it another way) we cannot support the claim that those that receive vouchers experienced a difference in reading scores after a year.
+
+Note: As means of double checking the quality of our calculation, we can confirm that the mean is within the 99 percent confidence interval.
+
 *** 
 ###14. (4 points) Explain how you could evaluate the hypothesis above using a confidence interval instead of a p-value.
 
@@ -297,6 +318,7 @@ As we see, symmetry is supported for both groups. We are satisfied that each of 
 
 ***
 ###15. (2 points) Interpret the confidence interval you estimated for question N in a sentence.
+<span style="color:green">NOTE: Again, I'm not quite sure about the phrasing of this question. It refers to a question N? I'm going to operate on the assumption that it is referring to Question 14.</span>
 
 ```{r}
 

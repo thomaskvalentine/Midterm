@@ -323,9 +323,20 @@ We can be 99% confident that the average change in reading scores after the firs
 ***
 ###16. (8 points) Perform a test of whether the average math pre-test score differs by grade level at $\alpha = 0.10$ significance level. Write out your hypothesis in symbols, perform the test, and then report your findings in a complete sentence.
 
-```{r}
+**Null Hypothesis:** Average math pre-test scores are the same at all grade levels.
 
+**Alternative Hypothesis:** Average math pre-test scores are not the same at all grade levels.
+
+$$H_0: y0_math_percentile == y0_math_percentile[Grade]`$$
+$$H_A: y0_math_percentile != y0_math_percentile[Grade]`$$
+
+```{r}
+#We conduct an ANOVA to see whether there is a significant difference in average math pre-test scores by students in different grade levels.
+aovmath <- aov(nyc_clean$y0_math_percentile ~ as.character(nyc_clean$Grade))
+summary(aovmath)
 ```
+
+The resulting p-value is 5.26e-10, an extremely small number, certainly much smaller than a .10 alpha. We reject the null and can support the claim that average math pre-test score differs by grade level.
 
 ***
 ###17. (8 points) The NYC School District considers students who perform at or above the 50th percentile to be "passing". At a 99% significance level, is the proportion of all students in the sample (voucher and no-voucher) that are considered to be passing in math significantly different between the pre-test and year 1 post-test?

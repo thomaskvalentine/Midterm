@@ -458,15 +458,29 @@ nyc_clean$ReadAfter &lt;-<span class="st"> </span>(nyc_clean$y1_read_percentile 
 <div id="points-explain-how-you-could-evaluate-the-hypothesis-above-using-a-confidence-interval-instead-of-a-p-value." class="section level3">
 <h3>14. (4 points) Explain how you could evaluate the hypothesis above using a confidence interval instead of a p-value.</h3>
 <p>As explained on page 182 of our OpenIntro Statistics book, we can confidently test hypotheses using confidence intervals. To do so, we look to see if the mean falls within the range of the plausibe values from the confidence interval. In this scenario, that means we would look for the average to fall between the 99% confidence interval of 0.9425593 to 4.5503984. Because the average (1.27) does fall in that range, we “cannot say the null hypothesis is implausible. That is, we fail to reject the null hypothesis, H_0”</p>
+<p>If necessary, we could also construct the interval at hand, using a 2.33 z score and creating it step by step. However, our t-test in Q.13 revealed our confidence interval and gave us the necessary information to answer this question.</p>
 <hr />
 </div>
 <div id="points-interpret-the-confidence-interval-you-estimated-for-question-n-in-a-sentence." class="section level3">
 <h3>15. (2 points) Interpret the confidence interval you estimated for question N in a sentence.</h3>
-<p><span style="color:green">NOTE: Again, I’m not quite sure about the phrasing of this question. It refers to a question N? I’m going to operate on the assumption that it is referring to Question 14.</span></p>
+<p><span style="color:green">NOTE: Again, I’m not quite sure about the phrasing of this question. It refers to a question N? I’m going to operate on the assumption that it is referring to Question 14.</span> We can be 99% confident that the average change in reading scores after the first year falls in the range of .94 to 4.55, based on a sample of 780 students.</p>
 <hr />
 </div>
 <div id="points-perform-a-test-of-whether-the-average-math-pre-test-score-differs-by-grade-level-at-alpha-0.10-significance-level.-write-out-your-hypothesis-in-symbols-perform-the-test-and-then-report-your-findings-in-a-complete-sentence." class="section level3">
 <h3>16. (8 points) Perform a test of whether the average math pre-test score differs by grade level at <span class="math">\(\alpha = 0.10\)</span> significance level. Write out your hypothesis in symbols, perform the test, and then report your findings in a complete sentence.</h3>
+<p><strong>Null Hypothesis:</strong> Average math pre-test scores are the same at all grade levels.</p>
+<p><strong>Alternative Hypothesis:</strong> Average math pre-test scores are not the same at all grade levels.</p>
+<p><span class="math">\[H_0: y0_math_percentile == y0_math_percentile[Grade]`\]</span> <span class="math">\[H_A: y0_math_percentile != y0_math_percentile[Grade]`\]</span></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#We conduct an ANOVA to see whether there is a significant difference in average math pre-test scores by students in different grade levels.</span>
+aovmath &lt;-<span class="st"> </span><span class="kw">aov</span>(nyc_clean$y0_math_percentile ~<span class="st"> </span><span class="kw">as.character</span>(nyc_clean$Grade))
+<span class="kw">summary</span>(aovmath)</code></pre>
+<pre><code>##                                 Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## as.character(nyc_clean$Grade)    6  19851    3309   9.287 5.26e-10 ***
+## Residuals                     1410 502309     356                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 38 observations deleted due to missingness</code></pre>
+<p>The resulting p-value is 5.26e-10, an extremely small number, certainly much smaller than a .10 alpha. We reject the null and can support the claim that average math pre-test score differs by grade level.</p>
 <hr />
 </div>
 <div id="points-the-nyc-school-district-considers-students-who-perform-at-or-above-the-50th-percentile-to-be-passing.-at-a-99-significance-level-is-the-proportion-of-all-students-in-the-sample-voucher-and-no-voucher-that-are-considered-to-be-passing-in-math-significantly-different-between-the-pre-test-and-year-1-post-test" class="section level3">

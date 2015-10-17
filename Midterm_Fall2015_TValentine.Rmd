@@ -386,15 +386,17 @@ As expected from Question 17, we see that the median values of 16 (for year zero
 ###19. (4 points) Consider the correlation between math percentile and reading percentile for year 1 test scores. Compute Pearson’s `r` between these two variables. Is the correlation higher or lower than you would have expected? 
 
 ```{r}
-
+cor(nyc_clean$y1_read_percentile, nyc_clean$y1_math_percentile, method = c("pearson"))
 ```
+
+The calculated Pearson's r is .6164846. Since the highest possible value on Pearson's scale is 1, representing 100, we could translate this correlation to 61.64%. This correlation is not surprising. Throughout this exercise, we have demonstrated through figures and calculations that there are not significant differences as we move year to year, from treatment group to control group,, and now test to test. Judging from this stability, and the fact that we are dealing with the same set set of students (any student who had a missing response in either or both of these columns were removed during our first question), it is not suprising that the ability levels (and score performance) is correlated across disciples (math/reading).
 
 ***
 ###20. (6 points) You might argue that percentiles are actually rank-order data and not ratio-level data. For rank-order data, a more appropriate correlation measure is Spearman’s $\rho$, which is a rank correlation. Compute $\rho$ and contrast the results from $r$ (for question S above). Why do the results differ?
 
-```{r}
+<span style="color:green"> I am answering with the assumption that question S is referring to question 19</span>
 
-```
+
 
 ***
 #### The command below is for debugging and was adopted from our homework keys

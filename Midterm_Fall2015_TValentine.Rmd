@@ -371,9 +371,16 @@ The difference between the two is .01, which is acceptable for a .01 alpha or 99
 ***
 ###18. (6 points) Make a boxplot that compares the distribution of math scores between the pre-test and year 1 post-test for all students. Do your best to make the figure "publishable" by giving it clear axis titles, legend labels, and other aesthetic improvements. In no more than 2-3 sentences, describe how your figure supports (or does not support) your finding from question 17.
 
-```{r}
-
+```{r echo=FALSE}
+boxplot(nyc_clean$y0_math_percentile, nyc_clean$y1_math_percentile,
+        horizontal=TRUE,
+        names=c("Year 0","Year 1"),
+        col=c("darkcyan","chartreuse4"),
+        xlab="Student Scores",
+        main="Math Scores in NYC Schools")
 ```
+
+As expected from Question 17, we see that the median values of 16 (for year zero) and 18 (for year 1) have been plotted and that (proportionally to the size of the rectangle), we see that the virtually identical values of .34 above median and .35 above median are represented.  
 
 ***
 ###19. (4 points) Consider the correlation between math percentile and reading percentile for year 1 test scores. Compute Pearson’s `r` between these two variables. Is the correlation higher or lower than you would have expected? 

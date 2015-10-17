@@ -247,8 +247,30 @@ Note: As means of double checking the quality of our calculation, we can confirm
 ###11. (6 points) There are four assumptions that hold for the test above to be valid: independence within groups, independence between groups, sample sizes both above 30, and symmetric distributions. Are you satisfied that each of these are upheld? Is there anything in particular that you might be concerned about? 
 
 ```{r}
-
+#First, I would like to collect some basic information on each group
+library(pastecs)
+stat.desc(nyc_clean$MathAfter[nyc_clean$Treatment==1])
+stat.desc(nyc_clean$MathAfter[nyc_clean$Treatment==0])
+#Note: The # of Values is 1 more than accurate; it does not take into account the header
 ```
+
+<span style="color:green">Assumption One: Independence Within Groups: </span>
+Independence is a good assumption. It seems unlikely the performance of one student within the group would influence the performance of another student within the same group.
+
+<span style="color:green">Assumption Two: Independence Between Groups: </span>
+Independence is again a good assumption. It seems unlikely that the performance of a student in a group could influence the performance of a student in another group.
+
+<span style="color:green">Assumption Three: Sample Sizes Both Above 30: </span> 
+ As we confirmed in the stat.desc commands, the Voucher group is a sample of 780 people, while the Non-Voucher group is a saple of 673 people. Both groups meet the standard of this requirement. We could also have accomplish this with the table function, if desired. No matter what, we have confirmed n>30.
+
+<span style="color:green">Assumption Four: Symmetric Distributions </span>
+```{r}
+#Let's plot the two groups to take a look at their symmetry:
+library(ggplot2)
+ggplot(nyc_clean,aes(x=nyc_clean$MathAfter,group=nyc_clean$Treatment,col=nyc_clean$Treatment)) + geom_density() + theme_bw()
+```
+
+As we see, symmetry is supported for both groups. We are satisfied that each of these are upheld. It feels callous to say there is nothing we are concerned about (especially on a test where I'm certain we are meant to notice something), but all I can mention is that the symmetry may not be quite perfect. We can see some changes on the right side of the distribution, possibly indicating some important phenomena. Mostly, however, I think we should feel satisfied.
 
 
 ***

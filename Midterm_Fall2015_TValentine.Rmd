@@ -342,8 +342,31 @@ The resulting p-value is 5.26e-10, an extremely small number, certainly much sma
 ###17. (8 points) The NYC School District considers students who perform at or above the 50th percentile to be "passing". At a 99% significance level, is the proportion of all students in the sample (voucher and no-voucher) that are considered to be passing in math significantly different between the pre-test and year 1 post-test?
 
 ```{r}
+#Let's determine the 50th percentile for each year
+#First, let's look at pre-test:
+summary(nyc_clean$y0_math_percentile)
+quantile(nyc_clean$y0_read_percentile, c(.25, .50,  .75, .90, .99))
 
+#Now, let's look at the year 1 post-test:
+summary(nyc_clean$y1_math_percentile)
+quantile(nyc_clean$y1_read_percentile, c(.25, .50,  .75, .90, .99))
 ```
+
+The 50th percentile for Pre-Test/Year 0 is 16.00
+The 50th percentile for Post-Test/Year 1 is 18.00
+
+```{r}
+#Now, let's look at proportions:
+#Proportions for Pre-Test/Year 0
+table(nyc_clean$y0_math_percentile>16)
+#Proportions for Post-Test/Year 1
+table(nyc_clean$y0_math_percentile>18)
+```
+
+The proportion above the 50th percentile in Year 0 is 515/1455, or .35
+The proportion above the 50th percentile in Year 1 is 493/1455, or .34
+
+The difference between the two is .01, which is acceptable for a .01 alpha or 99% significance level.
 
 ***
 ###18. (6 points) Make a boxplot that compares the distribution of math scores between the pre-test and year 1 post-test for all students. Do your best to make the figure "publishable" by giving it clear axis titles, legend labels, and other aesthetic improvements. In no more than 2-3 sentences, describe how your figure supports (or does not support) your finding from question 17.

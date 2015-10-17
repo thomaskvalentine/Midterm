@@ -396,7 +396,11 @@ The calculated Pearson's r is .6164846. Since the highest possible value on Pear
 
 <span style="color:green"> I am answering with the assumption that question S is referring to question 19</span>
 
+```{r}
+cor(nyc_clean$y1_read_percentile, nyc_clean$y1_math_percentile, method = c("spearman"))
+```
 
+The result is .5848958. The results are close, but differ by .0315888. If we assume that percentiles are linear, than Pearson's is the better choice. If, as the question suggests, we consider the data to be rank-order or monotonic (basically, consisting of a certain, well-preserved order) than we may prefer to use Spearman's. Percentiles may indeed be more appropriate for this as it is likely there is so social/power/cast/ranking system, where certain students consistently perform along a preserved rank. The larger coefficient produced by Pearson's suggests that this set is closer to being linear than it is monotonic, a fact that it is not surprising in a school setting where there may be trends, but not occuring in a completely monotonic and predictable rank.
 
 ***
 #### The command below is for debugging and was adopted from our homework keys

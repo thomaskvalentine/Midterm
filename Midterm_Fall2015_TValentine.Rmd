@@ -155,28 +155,82 @@ summary(cars)
 ###6. (4 points) What is the probability that a randomly selected student in the dataset received a voucher and scored above the 50th percentile on the math pre-test?
 
 ```{r}
-summary(cars)
+#First, we will use the Shapiro-Wilks test to formally check if the sample (students that received a score on the math pre-test) is normally distributed.
+shapiro <- shapiro.test(nyc_clean$y0_math_percentile)
 ```
+Our resulting p-value is < 2.2e-16, or less than 0.00000000000000022. We can use in-line r code to find out that the actual p-value is `r shapiro$p.value`. With a p-value far less than .05, we have an infinitesimal chance of a normal distribution. We can reject the null hypothesis of normality.
+
+```{r}
+#Next, we can find out more about the value of the math pre-test sample, including the value of the Mean or 50% percentile mark:
+summary(nyc_clean$y0_math_percentile)
+quantile(nyc_clean$y0_read_percentile, c(.25, .50,  .75, .90, .99))
+```
+
+So, here's what we know: The 50th percentile is 16. We have 1455 observations.This are not disjoint/mutally exclusive outcomes. We do not have a normal distribution. We can not confidently say the outcomes are independent of one another. If we say that receiving a voucher is Event A and that scoring about the 50% percentile is Event B, we know that: $$P(A and B) = P(A | B) P(B)$$ Another way of saying this is: $$P(Voucher and Above50) = P(Voucher | Above50) P(Above50)$$ Since we don't have a normal distribution, we are prohibited from using some of the useful pnorm type commands. Instead, we will use a frequency table.   
+
+```{r}
+#In the following frequency table, Treatment (Receiving a Voucher) will be the rows, scoring above 16.42 (scoring above the mean) will be the columns.
+mytable <- table(nyc_clean$Treatment==1, nyc_clean$y0_math_percentile>16)
+
+#We can conduct a chi-square test on this table to determine if these are independent outcomes.
+chisq.test(mytable)
+```
+
+As the p value of the Pearson's chi-square test is signficantly above .05, we do not reject the null hypothesis that receiving a voucher is independent of scoring above 50. This allows us to now use the multiplicaton rule for independent processes. So:
+$$P(AandB)=P(A)xP(B)$$.
+
+```{r}
+#Now, let's see the results of the table itself
+table(nyc_clean$Treatment==1, nyc_clean$y0_math_percentile>16)
+```
+
+Using this table, we see that 282 out of the 1455 students are above the 50% percentile AND have received a voucher. This allows us to determine that the probability a randomly selected student in the dataset received a voucher and scored above the 50th percentile on the math pre-test is 282/1455, or 19%.
+
+Let's confirm this with the P(AandB)=P(A)xP(B) formula. From the table, we can see that 233+282 or 515 students scored above the 50th percentile. This puts the odds of Event A as 515/1455 or 35%. From the table, we can see that Event B would similarly be 781/1455 or 54%. If we use the multiplication rules, we get 35% x 54%, which results in 19%. This confirms our earlier calculation.
+
+<span style="color:green">The probability that a randomly selected student in the dataset received a voucher and scored above the 50th percentile on the math pre-test is 19%</span>
 
 ***
 ###7. (4 points) What is the probability that a randomly selected student who received a voucher group scored above the 50th percentile on the math pre-test?
 
+<span style="color:green">It is not immediately clear how this question is different than Question 6. Both seem to ask what is the probability that a randomly selected student in the dataset received a voucher and scored above the 50th percentile. I'm not sure what the significance of "group scored" or how one could receive a "voucher group" so I'm not sure how to proceed.My best guess is that one of these questions was intended to ask the odds of both events occuring ("AND") as opposed to the odds that one or the other event occurs ("OR"), so I have solved this question for the or. </span>
+
+As opposed to the previous question, where we used the P(AandB)=P(A)xP(B) formula, we instead use the following formula: $$P(A or B) = P(A) + P(B) - P(A and B)$$ We can use the values we calculated in Question 6 to fill in this probabilities. Therefore we know that:
 ```{r}
-summary(cars)
+#P(A or B) = P(A) + P(B) - P(A and B)
+515/1455 + 781/1455 - 282/1455
 ```
+
+<span style="color:green">The probability that a randomly selected student received a voucher OR scored above the 50th percentile on the math pre-test is 69.6%</span>
 
 ***
 ###8. (4 points) We are interested in studying whether the change in math scores after one year is different for students who receive a voucher versus those who do not. Write the null and alternative hypotheses in words and then using symbols.
 
 ```{r}
-summary(cars)
+#Before we begin, we need to know the average change in math scores after one year (from year 0 to year 1) for all students:
+mathchg <- mean(nyc_clean$y1_math_percentile)-mean(nyc_clean$y0_math_percentile)
 ```
+
+Now that we know that the average change in math scores after one year is `r round(mathchg, 2)`, we can construct our hypotheses:
+
+**Null Hypothesis:** Students who receive a voucher experience a change in math scores after one year that is equal to `r round(mathchg, 2)`.
+
+**Alternative Hypothesis:** Students who receive a voucher experience a change in math scores after one year that is not equal to `r round(mathchg, 2)`.
+
+$$H_0: \mu == `r round(mathchg, 2)`$$
+$$H_A: \mu != `r round(mathchg, 2)`$$
 
 ***
 ###9. (6 points) Evaluate the hypothesis from 8 at a significance level of α=0.05 and state your conclusion in 1-2 sentences. 
 
 ```{r}
-summary(cars)
+#First, we use the t.test command in R to test the hypothesis quickly
+t.test(x = voting.dat$tech,alternative = 'greater',mu = 3)
+
+#Next, we complete the process "by hand", going step by step. 
+#To do this, we use: t-obs = (obs-exp) / (sd/sqrt(n))
+t.obs <- (mean(voting.dat$tech) - 3) / {sd(voting.dat$tech)^2/sqrt(nrow(voting.dat))}
+pt(t.obs,df = nrow(voting.dat)-1,lower.tail = FALSE)
 ```
 
 ***
